@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/md_white_1000">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/employee_details_left_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.05" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/employee_details_right_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.95" />
+
+    <TextView
+        android:id="@+id/employee_details_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="@string/employee_details"
+        android:textColor="@color/md_black_1000"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="@+id/employee_details_left_guideline"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/first_name_input_field"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:hint="@string/first_name"
+        app:boxBackgroundColor="@color/md_grey_50"
+        app:layout_constraintEnd_toEndOf="@+id/employee_details_right_guideline"
+        app:layout_constraintStart_toStartOf="@+id/employee_details_left_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/employee_details_title">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/first_name_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:maxLines="1" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/last_name_input_field"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:hint="@string/last_name"
+        app:boxBackgroundColor="@color/md_grey_50"
+        app:layout_constraintEnd_toEndOf="@+id/employee_details_right_guideline"
+        app:layout_constraintStart_toStartOf="@+id/employee_details_left_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/first_name_input_field">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/last_name_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:maxLines="1" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/gender_spinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toStartOf="@+id/employee_details_right_guideline"
+        app:layout_constraintStart_toStartOf="@+id/employee_details_left_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/last_name_input_field" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/employee_details_button"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:elevation="2dp"
+        android:insetLeft="0dp"
+        android:insetTop="0dp"
+        android:insetRight="0dp"
+        android:insetBottom="0dp"
+        android:text="@string/update_employee"
+        app:cornerRadius="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/employee_details_loading_overlay"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/md_white_1000"
+        app:layout_constraintBottom_toTopOf="@+id/employee_details_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/employee_details_title">
+
+        <ProgressBar
+            android:layout_gravity="center"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            />
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

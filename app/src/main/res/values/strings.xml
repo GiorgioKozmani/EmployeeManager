@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">EmployeesManager</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
+    <string name="retry">Retry</string>
+    <string name="could_not_load_more_content_error">Could not load more content.</string>
+    <string name="could_not_load_content_error">Could not load content.</string>
+    <string name="internet_connection_error">No internet. Check your connection.</string>
+    <string name="list_frag_label">ListFragment</string>
+    <string name="update_frag_label">UpdateFragment</string>
+    <string name="update_employee">Update Employee</string>
+    <string name="employee_details">Employee details</string>
+    <string name="departments">Departments</string>
+    <string name="updating">Updating...</string>
+    <string name="update_error">Update failed, try again</string>
+    <string name="update_completed">Update completed!</string>
+</resources>
