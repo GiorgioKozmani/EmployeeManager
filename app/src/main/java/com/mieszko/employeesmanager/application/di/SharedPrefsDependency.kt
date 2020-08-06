@@ -1,15 +1,17 @@
 package com.mieszko.employeesmanager.application.di
 
-import com.google.gson.GsonBuilder
+import android.content.SharedPreferences
+import androidx.preference.PreferenceManager
 import com.mieszko.employeesmanager.data.source.local.SharedPrefs
+import com.mieszko.employeesmanager.data.source.local.SharedPrefsImpl
 import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module
 
 val sharedPrefsDependency = module {
-    single {
-        SharedPrefs(androidApplication())
+    single<SharedPrefs> {
+        SharedPrefsImpl(get())
     }
-    single {
-        GsonBuilder().create()
+    single<SharedPreferences> {
+        PreferenceManager.getDefaultSharedPreferences(androidApplication())
     }
 }

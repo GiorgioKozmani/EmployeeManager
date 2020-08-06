@@ -18,7 +18,7 @@ class AccessTokenCacheImpl(
     private val type: Type = object : TypeToken<AccessToken>() {}.type
 
     override fun getAccessToken(): Single<AccessToken> {
-        val savedJson = sharedPrefs.getString(SharedPrefs.Key.AccessToken)
+        val savedJson = sharedPrefs.getString(SharedPrefs.Keys.AccessToken)
         val savedToken: AccessToken? = gson.fromJson(savedJson, type)
         return if (savedToken != null && savedToken.isValid()) {
             Single.just(savedToken)
@@ -28,6 +28,6 @@ class AccessTokenCacheImpl(
     }
 
     override fun cacheAccessToken(newAccessToken: AccessToken) {
-        sharedPrefs.put(SharedPrefs.Key.AccessToken, gson.toJson(newAccessToken, type))
+        sharedPrefs.put(SharedPrefs.Keys.AccessToken, gson.toJson(newAccessToken, type))
     }
 }
