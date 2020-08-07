@@ -1,6 +1,5 @@
 package com.mieszko.employeesmanager.application.di
 
-import com.google.gson.GsonBuilder
 import com.mieszko.employeesmanager.data.source.remote.ApiHeadersProvider
 import com.mieszko.employeesmanager.data.source.remote.ApiHeadersProviderImpl
 import com.mieszko.employeesmanager.data.source.remote.api.AccessTokenApi
@@ -22,9 +21,6 @@ const val EMPLOYEE_API_URL_BASE = "https://openapi.planday.com/hr/v1/"
 const val AUTH_API_URL_BASE = "https://id.planday.com/connect/"
 
 val networkDependency = module {
-    single {
-        GsonBuilder().create()
-    }
     single<ApiHeadersProvider> {
         ApiHeadersProviderImpl()
     }

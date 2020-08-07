@@ -23,7 +23,7 @@ class AccessTokenCacheImpl(
         return if (savedToken != null && savedToken.isValid()) {
             Single.just(savedToken)
         } else {
-            Single.error(Exception("Access Token expired or not found."))
+            Single.error(SecurityException("Access Token expired or not found."))
         }
     }
 

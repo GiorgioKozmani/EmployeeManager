@@ -25,7 +25,6 @@ class EmployeeProfileMapperKtTest {
         listOf(
             "Female" to Gender.Female,
             "Male" to Gender.Male,
-            "unknown" to null,
             null to null
         ).forEach {
             assertEquals(

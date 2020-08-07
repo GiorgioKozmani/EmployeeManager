@@ -1,6 +1,8 @@
 package com.mieszko.employeesmanager.data.source.local
 
+import android.content.Context
 import android.content.SharedPreferences
+import androidx.preference.PreferenceManager
 
 
 interface SharedPrefs {
@@ -13,7 +15,8 @@ interface SharedPrefs {
     }
 }
 
-class SharedPrefsImpl(private val mSharedPrefs: SharedPreferences) : SharedPrefs {
+class SharedPrefsImpl(context: Context) : SharedPrefs {
+    private val mSharedPrefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
     // STRING
     override fun put(key: SharedPrefs.Keys, toPut: String?) {

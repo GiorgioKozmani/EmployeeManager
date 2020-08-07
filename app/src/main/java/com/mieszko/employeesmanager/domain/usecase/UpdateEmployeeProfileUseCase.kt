@@ -13,8 +13,7 @@ interface UpdateEmployeeProfileUseCase {
 class UpdateEmployeeProfileUseCaseImpl(
     private val employeeProfileRepository: EmployeeProfileRepository,
     private val getAccessTokenUseCase: GetAccessTokenUseCase
-) :
-    UpdateEmployeeProfileUseCase {
+) : UpdateEmployeeProfileUseCase {
 
     override operator fun invoke(
         updatedProfile: EmployeeProfile
