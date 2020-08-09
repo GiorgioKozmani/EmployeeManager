@@ -14,20 +14,21 @@ import io.reactivex.subjects.PublishSubject
 
 class UpdateViewModel(
     private val employeeId: Int,
-    getEmployeeProfileUseCase: GetEmployeeProfileUseCase,
-    private val updateEmployeeProfileUseCase: UpdateEmployeeProfileUseCase
+    private val updateEmployeeProfileUseCase: UpdateEmployeeProfileUseCase,
+    getEmployeeProfileUseCase: GetEmployeeProfileUseCase
 ) : ViewModel() {
     private val disposablesBag = CompositeDisposable()
 
     val inputChange: PublishSubject<ProfileFieldChange> = PublishSubject.create()
 
+    // variables representing UI state
     private var firstNameInput: String = ""
     private var lastNameInput: String = ""
     private var genderInput: Gender? = null
 
+    // exposing only LiveData
     private val _employeeProfileLiveData = MutableLiveData<Resource<EmployeeProfile>>()
     private val _updateStateLiveData = MutableLiveData<Resource<Int>>()
-
     val employeeProfileLiveData: LiveData<Resource<EmployeeProfile>> get() = _employeeProfileLiveData
     val updateStateLiveData: LiveData<Resource<Int>> get() = _updateStateLiveData
 
