@@ -3,11 +3,10 @@ package com.mieszko.employeesmanager.domain.usecase
 import com.mieszko.employeesmanager.domain.model.AccessToken
 import com.mieszko.employeesmanager.domain.model.EmployeeProfile
 import com.mieszko.employeesmanager.domain.repository.EmployeeProfileRepository
+import com.mieszko.employeesmanager.domain.util.TestSchedulerProvider
 import io.reactivex.Completable
 import io.reactivex.Single
-import io.reactivex.android.plugins.RxAndroidPlugins
-import io.reactivex.schedulers.Schedulers
-import org.junit.Before
+import io.reactivex.schedulers.TestScheduler
 import org.junit.Rule
 import org.junit.Test
 import org.koin.core.inject
@@ -36,11 +35,6 @@ class UpdateEmployeeProfileUseCaseImplTest : KoinTest {
     private val profileRepository: EmployeeProfileRepository by inject()
     private val tokenUseCase: GetAccessTokenUseCase by inject()
 
-    @Before
-    fun setUp() {
-        RxAndroidPlugins.setInitMainThreadSchedulerHandler { Schedulers.trampoline() }
-    }
-
     @Test
     fun `usecase invoked updates profile`() {
         val tokenMock = Mockito.mock(AccessToken::class.java)
@@ -55,8 +49,13 @@ class UpdateEmployeeProfileUseCaseImplTest : KoinTest {
             )
         }
 
-        UpdateEmployeeProfileUseCaseImpl(profileRepository, tokenUseCase)
-            .invoke(profileMock).test()
+        UpdateEmployeeProfileUseCaseImpl(
+            profileRepository,
+            tokenUseCase,
+            TestSchedulerProvider(TestScheduler())
+        )
+            .invoke(profileMock)
+            .test()
 
         verify(profileRepository, times(1))
             .updateEmployeeProfile(profileMock, tokenMock)

@@ -3,6 +3,7 @@ package com.mieszko.employeesmanager.domain.usecase
 import com.mieszko.employeesmanager.TestUtil.anyNonNull
 import com.mieszko.employeesmanager.domain.model.AccessToken
 import com.mieszko.employeesmanager.domain.repository.AuthRepository
+import com.mieszko.employeesmanager.domain.util.TrampolineSchedulerProvider
 import io.reactivex.Single
 import org.junit.Rule
 import org.junit.Test
@@ -39,10 +40,9 @@ class GetAccessTokenUseCaseImplTest : KoinTest {
             given(this.getToken()).willReturn(Single.just(accessToken))
         }
 
-        GetAccessTokenUseCaseImpl(authRepository)
+        GetAccessTokenUseCaseImpl(authRepository, TrampolineSchedulerProvider())
             .invoke()
             .test()
-            .await()
             .assertResult(accessToken)
 
         verify(authRepository, times(1)).cacheToken(accessToken)
@@ -57,7 +57,7 @@ class GetAccessTokenUseCaseImplTest : KoinTest {
                 .willReturn(Single.error(thrownException))
         }
 
-        GetAccessTokenUseCaseImpl(authRepository)
+        GetAccessTokenUseCaseImpl(authRepository, TrampolineSchedulerProvider())
             .invoke()
             .test()
             .await()

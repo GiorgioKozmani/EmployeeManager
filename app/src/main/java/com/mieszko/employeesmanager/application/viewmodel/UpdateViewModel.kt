@@ -59,7 +59,7 @@ class UpdateViewModel(
         )
     }
 
-    fun onButtonClick() {
+    fun onUpdateButtonClick() {
         disposablesBag
             .add(updateEmployeeProfileUseCase(
                 EmployeeProfile(

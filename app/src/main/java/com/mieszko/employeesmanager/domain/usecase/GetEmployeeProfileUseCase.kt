@@ -2,9 +2,8 @@ package com.mieszko.employeesmanager.domain.usecase
 
 import com.mieszko.employeesmanager.domain.model.EmployeeProfile
 import com.mieszko.employeesmanager.domain.repository.EmployeeProfileRepository
+import com.mieszko.employeesmanager.domain.util.SchedulerProvider
 import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 
 interface GetEmployeeProfileUseCase {
     operator fun invoke(id: Int): Single<EmployeeProfile>
@@ -12,7 +11,8 @@ interface GetEmployeeProfileUseCase {
 
 class GetEmployeeProfileUseCaseImpl(
     private val employeeProfileRepository: EmployeeProfileRepository,
-    private val getAccessTokenUseCase: GetAccessTokenUseCase
+    private val getAccessTokenUseCase: GetAccessTokenUseCase,
+    private val schedulerProvider: SchedulerProvider
 ) :
     GetEmployeeProfileUseCase {
 
@@ -21,8 +21,8 @@ class GetEmployeeProfileUseCaseImpl(
             .flatMap { accessToken ->
                 employeeProfileRepository
                     .getEmployeeProfile(id, accessToken)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(schedulerProvider.io())
+                    .observeOn(schedulerProvider.ui())
             }
 
     }

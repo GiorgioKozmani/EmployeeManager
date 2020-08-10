@@ -12,15 +12,18 @@ class EmployeesManagerApp : Application() {
         super.onCreate()
         startKoin {
             androidContext(this@EmployeesManagerApp)
-            listOf(
-                gsonDependency,
-                cacheDependency,
-                networkDependency,
-                repositoryDependency,
-                sharedPrefsDependency,
-                useCaseDependency,
-                viewModelDependency,
-                pagingConfigDependency
+            modules(
+                listOf(
+                    schedulersDependency,
+                    gsonDependency,
+                    cacheDependency,
+                    networkDependency,
+                    repositoryDependency,
+                    sharedPrefsDependency,
+                    useCaseDependency,
+                    viewModelDependency,
+                    pagingConfigDependency
+                )
             )
         }
     }

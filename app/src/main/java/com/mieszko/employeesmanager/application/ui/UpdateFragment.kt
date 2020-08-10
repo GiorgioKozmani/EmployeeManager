@@ -80,7 +80,7 @@ class UpdateFragment : Fragment() {
     private fun setUpdateClickListener() {
         employee_details_button
             .setOnClickListener {
-                viewModel.onButtonClick()
+                viewModel.onUpdateButtonClick()
             }
     }
 

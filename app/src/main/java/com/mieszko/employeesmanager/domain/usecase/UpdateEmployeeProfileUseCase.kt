@@ -2,9 +2,8 @@ package com.mieszko.employeesmanager.domain.usecase
 
 import com.mieszko.employeesmanager.domain.model.EmployeeProfile
 import com.mieszko.employeesmanager.domain.repository.EmployeeProfileRepository
+import com.mieszko.employeesmanager.domain.util.SchedulerProvider
 import io.reactivex.Completable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 
 interface UpdateEmployeeProfileUseCase {
     operator fun invoke(updatedProfile: EmployeeProfile): Completable
@@ -12,7 +11,8 @@ interface UpdateEmployeeProfileUseCase {
 
 class UpdateEmployeeProfileUseCaseImpl(
     private val employeeProfileRepository: EmployeeProfileRepository,
-    private val getAccessTokenUseCase: GetAccessTokenUseCase
+    private val getAccessTokenUseCase: GetAccessTokenUseCase,
+    private val schedulerProvider: SchedulerProvider
 ) : UpdateEmployeeProfileUseCase {
 
     override operator fun invoke(
@@ -22,8 +22,8 @@ class UpdateEmployeeProfileUseCaseImpl(
             .flatMapCompletable { accessToken ->
                 employeeProfileRepository
                     .updateEmployeeProfile(updatedProfile, accessToken)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(schedulerProvider.io())
+                    .observeOn(schedulerProvider.ui())
             }
     }
 }

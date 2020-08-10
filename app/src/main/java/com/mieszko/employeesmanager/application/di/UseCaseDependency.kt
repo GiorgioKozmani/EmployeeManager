@@ -6,32 +6,37 @@ import org.koin.dsl.module
 val useCaseDependency = module {
     factory<GetAccessTokenUseCase> {
         GetAccessTokenUseCaseImpl(
-            authRepository = get()
+            authRepository = get(),
+            schedulerProvider = get()
         )
     }
     factory<GetEmployeeProfileUseCase> {
         GetEmployeeProfileUseCaseImpl(
             employeeProfileRepository = get(),
-            getAccessTokenUseCase = get()
+            getAccessTokenUseCase = get(),
+            schedulerProvider = get()
         )
     }
     factory<UpdateEmployeeProfileUseCase> {
         UpdateEmployeeProfileUseCaseImpl(
             employeeProfileRepository = get(),
-            getAccessTokenUseCase = get()
+            getAccessTokenUseCase = get(),
+            schedulerProvider = get()
         )
     }
     factory<GetDepartmentUseCase> {
         GetDepartmentUseCaseImpl(
             departmentRepository = get(),
-            getAccessTokenUseCase = get()
+            getAccessTokenUseCase = get(),
+            schedulerProvider = get()
         )
     }
     factory<GetEmployeesPagingSourceUseCase> {
         GetEmployeesPagingSourceUseCaseImpl(
             employeeRepository = get(),
             getAccessTokenUseCase = get(),
-            getDepartmentUseCase = get()
+            getDepartmentUseCase = get(),
+            schedulerProvider = get()
         )
     }
 }
