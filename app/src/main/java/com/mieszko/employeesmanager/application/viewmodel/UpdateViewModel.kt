@@ -74,7 +74,7 @@ class UpdateViewModel(
                 }
                 .subscribeBy(
                     onComplete = { _updateStateLiveData.value = Resource.Success(employeeId) },
-                    onError = { _updateStateLiveData.value = Resource.Error(null) }
+                    onError = { _updateStateLiveData.value = Resource.Error(it) }
                 ))
     }
 

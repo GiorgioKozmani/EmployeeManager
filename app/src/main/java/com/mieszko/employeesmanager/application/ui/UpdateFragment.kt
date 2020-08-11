@@ -45,83 +45,7 @@ class UpdateFragment : Fragment() {
         observeViewModel()
         setUpdateClickListener()
         setupFieldsChangeListeners()
-        initDynamicListSpinner()
-    }
-
-    private fun observeViewModel() {
-        observeEmployeeToEdit()
-        observeUpdateState()
-    }
-
-    private fun setupFieldsChangeListeners() {
-        RxTextView.textChanges(first_name_edit_text)
-            .skipInitialValue()
-            .map { ProfileFieldChange.FirstNameChange(it.toString()) }
-            .subscribe(viewModel.inputChange)
-
-        RxTextView.textChanges(last_name_edit_text)
-            .skipInitialValue()
-            .map { ProfileFieldChange.LastNameChange(it.toString()) }
-            .subscribe(viewModel.inputChange)
-
-        gender_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                viewModel.inputChange.onNext(ProfileFieldChange.GenderChange(null))
-            }
-
-            override fun onItemSelected(
-                parent: AdapterView<*>?, view: View?, position: Int, id: Long
-            ) {
-                viewModel.inputChange.onNext(ProfileFieldChange.GenderChange(Gender.values()[position]))
-            }
-        }
-    }
-
-    private fun setUpdateClickListener() {
-        employee_details_button
-            .setOnClickListener {
-                viewModel.onUpdateButtonClick()
-            }
-    }
-
-    private fun observeEmployeeToEdit() {
-        viewModel
-            .employeeProfileLiveData
-            .observe(
-                viewLifecycleOwner,
-                Observer {
-                    handleEmployeeToEditResponse(it)
-                }
-            )
-    }
-
-    private fun observeUpdateState() {
-        viewModel
-            .updateStateLiveData
-            .observe(
-                viewLifecycleOwner,
-                Observer {
-                    handleUpdateState(it)
-                }
-            )
-    }
-
-    private fun initDynamicListSpinner() {
-        val adapter: ArrayAdapter<String> = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_item,
-            Gender.values().map { it.name }
-        ).apply {
-            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        }
-
-        gender_spinner.adapter = adapter
-    }
-
-    private fun setupInitialValues(employeeProfileResponse: Resource.Success<EmployeeProfile>) {
-        first_name_edit_text.setText(employeeProfileResponse.data.firstName)
-        last_name_edit_text.setText(employeeProfileResponse.data.lastName)
-        employeeProfileResponse.data.gender?.ordinal?.let { gender_spinner.setSelection(it) }
+        initGenderSpinner()
     }
 
     private fun handleEmployeeToEditResponse(employeeProfileResponse: Resource<EmployeeProfile>) {
@@ -168,6 +92,82 @@ class UpdateFragment : Fragment() {
                 Toast.makeText(context, getString(R.string.update_error), Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun setupFieldsChangeListeners() {
+        RxTextView.textChanges(first_name_edit_text)
+            .skipInitialValue()
+            .map { ProfileFieldChange.FirstNameChange(it.toString()) }
+            .subscribe(viewModel.inputChange)
+
+        RxTextView.textChanges(last_name_edit_text)
+            .skipInitialValue()
+            .map { ProfileFieldChange.LastNameChange(it.toString()) }
+            .subscribe(viewModel.inputChange)
+
+        gender_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                viewModel.inputChange.onNext(ProfileFieldChange.GenderChange(null))
+            }
+
+            override fun onItemSelected(
+                parent: AdapterView<*>?, view: View?, position: Int, id: Long
+            ) {
+                viewModel.inputChange.onNext(ProfileFieldChange.GenderChange(Gender.values()[position]))
+            }
+        }
+    }
+
+    private fun observeEmployeeToEdit() {
+        viewModel
+            .employeeProfileLiveData
+            .observe(
+                viewLifecycleOwner,
+                Observer {
+                    handleEmployeeToEditResponse(it)
+                }
+            )
+    }
+
+    private fun observeUpdateState() {
+        viewModel
+            .updateStateLiveData
+            .observe(
+                viewLifecycleOwner,
+                Observer {
+                    handleUpdateState(it)
+                }
+            )
+    }
+
+    private fun observeViewModel() {
+        observeEmployeeToEdit()
+        observeUpdateState()
+    }
+
+    private fun setUpdateClickListener() {
+        employee_details_button
+            .setOnClickListener {
+                viewModel.onUpdateButtonClick()
+            }
+    }
+
+    private fun initGenderSpinner() {
+        val adapter: ArrayAdapter<String> = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            Gender.values().map { it.name }
+        ).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+
+        gender_spinner.adapter = adapter
+    }
+
+    private fun setupInitialValues(employeeProfileResponse: Resource.Success<EmployeeProfile>) {
+        first_name_edit_text.setText(employeeProfileResponse.data.firstName)
+        last_name_edit_text.setText(employeeProfileResponse.data.lastName)
+        employeeProfileResponse.data.gender?.ordinal?.let { gender_spinner.setSelection(it) }
     }
 
     companion object {

@@ -27,14 +27,9 @@ class UpdateViewModelTest {
     private lateinit var viewModel: UpdateViewModel
 
     @Test
-    fun `on view model creation profile loading event is emitted before success event`() {
-        // Don't emit value before 1000ms from subscription
-        val testScheduler = TestScheduler(1000, TimeUnit.MILLISECONDS)
-
-        Mockito
-            .`when`(testGetProfileUseCase.invoke(testProfile.id))
-            .thenReturn(Single.just(testProfile).observeOn(testScheduler))
-
+    fun `emits profile loading and success on successful profile fetch`() {
+        val testScheduler = TestScheduler()
+        mockGetProfileUseCase(Single.just(testProfile).observeOn(testScheduler))
         viewModel = createViewModel()
 
         assertEquals(
@@ -42,7 +37,7 @@ class UpdateViewModelTest {
             viewModel.employeeProfileLiveData.getOrAwaitValue(0)
         )
 
-        testScheduler.advanceTimeBy(2000, TimeUnit.MILLISECONDS)
+        testScheduler.advanceTimeBy(1, TimeUnit.MILLISECONDS)
 
         assertEquals(
             Resource.Success(testProfile),
@@ -51,17 +46,29 @@ class UpdateViewModelTest {
     }
 
     @Test
+    fun `emits profile loading and error on failed profile fetch`() {
+        val testScheduler = TestScheduler()
+        val testThrowable = Throwable()
+        mockGetProfileUseCase(Single.error<EmployeeProfile>(testThrowable).observeOn(testScheduler))
+        viewModel = createViewModel()
+
+        assertEquals(
+            Resource.Loading(null),
+            viewModel.employeeProfileLiveData.getOrAwaitValue(0)
+        )
+
+        testScheduler.advanceTimeBy(1, TimeUnit.MILLISECONDS)
+
+        assertEquals(
+            Resource.Error<EmployeeProfile>(testThrowable),
+            viewModel.employeeProfileLiveData.getOrAwaitValue(0)
+        )
+    }
+
+    @Test
     fun `profile changes are being uploaded on update button clicked`() {
-        //todo split test into smaller chunks with factored out parts
-
-        Mockito
-            .`when`(testGetProfileUseCase.invoke(testProfile.id))
-            .thenReturn(Single.just(testProfile))
-
-        Mockito
-            .`when`(testUpdateProfileUseCase.invoke(anyNonNull()))
-            .thenReturn(Completable.complete())
-
+        mockGetProfileUseCase(Single.just(testProfile))
+        mockProfileUpdateUseCase(Completable.complete())
         viewModel = createViewModel()
 
         val firstNameChange = ProfileFieldChange.FirstNameChange("changed_f_name")
@@ -72,10 +79,9 @@ class UpdateViewModelTest {
             firstNameChange,
             lastNameChange,
             genderChange
-        )
-            .forEach {
-                viewModel.inputChange.onNext(it)
-            }
+        ).forEach {
+            viewModel.inputChange.onNext(it)
+        }
 
         viewModel.onUpdateButtonClick()
 
@@ -89,6 +95,63 @@ class UpdateViewModelTest {
                     genderChange.gender
                 )
             )
+    }
+
+    @Test
+    fun `emits update loading and success on successful update`() {
+        val testScheduler = TestScheduler()
+        mockGetProfileUseCase(Single.just(testProfile))
+        mockProfileUpdateUseCase(Completable.complete().observeOn(testScheduler))
+        viewModel = createViewModel()
+
+        viewModel.onUpdateButtonClick()
+
+        assertEquals(
+            Resource.Loading(null),
+            viewModel.updateStateLiveData.getOrAwaitValue(0)
+        )
+
+        testScheduler.advanceTimeBy(1, TimeUnit.MILLISECONDS)
+
+        assertEquals(
+            Resource.Success(testProfile.id),
+            viewModel.updateStateLiveData.getOrAwaitValue(0)
+        )
+    }
+
+    @Test
+    fun `emits update loading and error on failed update`() {
+        val testScheduler = TestScheduler()
+        val testThrowable = Throwable()
+        mockGetProfileUseCase(Single.just(testProfile))
+        mockProfileUpdateUseCase(Completable.error(testThrowable).observeOn(testScheduler))
+        viewModel = createViewModel()
+
+        viewModel.onUpdateButtonClick()
+
+        assertEquals(
+            Resource.Loading(null),
+            viewModel.updateStateLiveData.getOrAwaitValue(0)
+        )
+
+        testScheduler.advanceTimeBy(1, TimeUnit.MILLISECONDS)
+
+        assertEquals(
+            Resource.Error<Int>(testThrowable),
+            viewModel.updateStateLiveData.getOrAwaitValue(0)
+        )
+    }
+
+    private fun mockProfileUpdateUseCase(updateCompletable: Completable) {
+        Mockito
+            .`when`(testUpdateProfileUseCase.invoke(anyNonNull()))
+            .thenReturn(updateCompletable)
+    }
+
+    private fun mockGetProfileUseCase(profileSingle: Single<EmployeeProfile>) {
+        Mockito
+            .`when`(testGetProfileUseCase.invoke(testProfile.id))
+            .thenReturn(profileSingle)
     }
 
     private fun createViewModel(): UpdateViewModel {

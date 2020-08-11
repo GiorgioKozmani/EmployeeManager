@@ -1,5 +1,6 @@
 package com.mieszko.employeesmanager
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import org.mockito.Mockito
@@ -8,10 +9,12 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
 object TestUtil {
+    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
     inline fun <reified T> anyNonNull(): T = Mockito.any<T>(T::class.java)
 
     /* Copyright 2019 Google LLC.
    SPDX-License-Identifier: Apache-2.0 */
+    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
     fun <T> LiveData<T>.getOrAwaitValue(
         time: Long = 2,
         timeUnit: TimeUnit = TimeUnit.SECONDS
@@ -35,5 +38,19 @@ object TestUtil {
 
         @Suppress("UNCHECKED_CAST")
         return data as T
+    }
+
+    /**
+     * Observes a [LiveData] until the `block` is done executing.
+     */
+    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
+    fun <T> LiveData<T>.observeForTesting(block: () -> Unit) {
+        val observer = Observer<T> { }
+        try {
+            observeForever(observer)
+            block()
+        } finally {
+            removeObserver(observer)
+        }
     }
 }
