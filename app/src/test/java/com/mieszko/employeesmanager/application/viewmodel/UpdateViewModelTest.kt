@@ -29,15 +29,21 @@ class UpdateViewModelTest {
     @Test
     fun `emits profile loading and success on successful profile fetch`() {
         val testScheduler = TestScheduler()
-        mockGetProfileUseCase(Single.just(testProfile).observeOn(testScheduler))
+        mockGetProfileUseCase(
+            Single
+                .just(testProfile)
+                .delay(1000, TimeUnit.MILLISECONDS, testScheduler)
+        )
         viewModel = createViewModel()
+
+        testScheduler.advanceTimeTo(999, TimeUnit.MILLISECONDS)
 
         assertEquals(
             Resource.Loading(null),
             viewModel.employeeProfileLiveData.getOrAwaitValue(0)
         )
 
-        testScheduler.advanceTimeBy(1, TimeUnit.MILLISECONDS)
+        testScheduler.advanceTimeTo(1001, TimeUnit.MILLISECONDS)
 
         assertEquals(
             Resource.Success(testProfile),
@@ -49,15 +55,21 @@ class UpdateViewModelTest {
     fun `emits profile loading and error on failed profile fetch`() {
         val testScheduler = TestScheduler()
         val testThrowable = Throwable()
-        mockGetProfileUseCase(Single.error<EmployeeProfile>(testThrowable).observeOn(testScheduler))
+        mockGetProfileUseCase(
+            Single
+                .error<EmployeeProfile>(testThrowable)
+                .delay(1000, TimeUnit.MILLISECONDS, testScheduler, true)
+        )
         viewModel = createViewModel()
+
+        testScheduler.advanceTimeTo(999, TimeUnit.MILLISECONDS)
 
         assertEquals(
             Resource.Loading(null),
             viewModel.employeeProfileLiveData.getOrAwaitValue(0)
         )
 
-        testScheduler.advanceTimeBy(1, TimeUnit.MILLISECONDS)
+        testScheduler.advanceTimeTo(1001, TimeUnit.MILLISECONDS)
 
         assertEquals(
             Resource.Error<EmployeeProfile>(testThrowable),
@@ -101,17 +113,22 @@ class UpdateViewModelTest {
     fun `emits update loading and success on successful update`() {
         val testScheduler = TestScheduler()
         mockGetProfileUseCase(Single.just(testProfile))
-        mockProfileUpdateUseCase(Completable.complete().observeOn(testScheduler))
+        mockProfileUpdateUseCase(
+            Completable
+                .complete()
+                .delay(1000, TimeUnit.MILLISECONDS, testScheduler)
+        )
         viewModel = createViewModel()
-
         viewModel.onUpdateButtonClick()
+
+        testScheduler.advanceTimeTo(999, TimeUnit.MILLISECONDS)
 
         assertEquals(
             Resource.Loading(null),
             viewModel.updateStateLiveData.getOrAwaitValue(0)
         )
 
-        testScheduler.advanceTimeBy(1, TimeUnit.MILLISECONDS)
+        testScheduler.advanceTimeTo(1001, TimeUnit.MILLISECONDS)
 
         assertEquals(
             Resource.Success(testProfile.id),
@@ -124,17 +141,23 @@ class UpdateViewModelTest {
         val testScheduler = TestScheduler()
         val testThrowable = Throwable()
         mockGetProfileUseCase(Single.just(testProfile))
-        mockProfileUpdateUseCase(Completable.error(testThrowable).observeOn(testScheduler))
+        mockProfileUpdateUseCase(
+            Completable
+                .error(testThrowable)
+                .delay(1000, TimeUnit.MILLISECONDS, testScheduler, true)
+        )
         viewModel = createViewModel()
 
         viewModel.onUpdateButtonClick()
+
+        testScheduler.advanceTimeTo(999, TimeUnit.MILLISECONDS)
 
         assertEquals(
             Resource.Loading(null),
             viewModel.updateStateLiveData.getOrAwaitValue(0)
         )
 
-        testScheduler.advanceTimeBy(1, TimeUnit.MILLISECONDS)
+        testScheduler.advanceTimeTo(1001, TimeUnit.MILLISECONDS)
 
         assertEquals(
             Resource.Error<Int>(testThrowable),
