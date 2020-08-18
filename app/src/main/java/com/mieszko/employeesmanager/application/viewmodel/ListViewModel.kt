@@ -21,9 +21,9 @@ class ListViewModel(
     }
 
     private fun recreatePagingSource() {
-        employeesPagingSource.invalidate()
         employeesPagingSource = get(GetEmployeesPagingSourceUseCase::class.java)
         employeePagerLiveData = createPager()
+        employeesPagingSource.invalidate()
     }
 
     private fun createPager(): LiveData<PagingData<Employee>> {

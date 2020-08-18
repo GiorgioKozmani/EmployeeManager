@@ -6,13 +6,6 @@ import org.koin.dsl.module
 
 val pagingConfigDependency = module {
     single {
-        PagingConfig(
-            pageSize = 10,
-            initialLoadSize = 15,
-            prefetchDistance = 10,
-            enablePlaceholders = false,
-            maxSize = PagingConfig.MAX_SIZE_UNBOUNDED,
-            jumpThreshold = PagingSource.LoadResult.Page.COUNT_UNDEFINED
-        )
+        PagingConfig(pageSize = 10)
     }
 }

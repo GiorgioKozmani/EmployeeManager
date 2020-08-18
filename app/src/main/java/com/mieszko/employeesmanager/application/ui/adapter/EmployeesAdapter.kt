@@ -22,8 +22,10 @@ class EmployeesAdapter :
 
     override fun onBindViewHolder(holder: EmployeeViewHolder, position: Int) {
         val employee = getItem(position)
-        holder.bind(employee) {
-            if (employee != null) {
+        if (employee == null) {
+            holder.bindPlaceholder()
+        } else {
+            holder.bind(employee) {
                 itemClicked.onNext(employee)
             }
         }

@@ -12,8 +12,7 @@ interface GetAccessTokenUseCase {
 class GetAccessTokenUseCaseImpl(
     private val authRepository: AuthRepository,
     private val schedulerProvider: SchedulerProvider
-) :
-    GetAccessTokenUseCase {
+) : GetAccessTokenUseCase {
 
     override operator fun invoke(): Single<AccessToken> {
         return authRepository.getToken()

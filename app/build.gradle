@@ -79,12 +79,12 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.6'
 
     //PAGING
-    implementation "androidx.paging:paging-runtime:3.0.0-alpha01"
-    testImplementation "androidx.paging:paging-common:3.0.0-alpha01"
-    implementation "androidx.paging:paging-rxjava2:3.0.0-alpha01"
+    implementation "androidx.paging:paging-runtime:3.0.0-alpha04"
+    testImplementation "androidx.paging:paging-common:3.0.0-alpha04"
+    implementation "androidx.paging:paging-rxjava2:3.0.0-alpha04"
 
     //navigation
-    implementation "androidx.navigation:navigation-fragment-ktx:2.2.2"
-    implementation "androidx.navigation:navigation-ui-ktx:2.2.2"
+    implementation "androidx.navigation:navigation-fragment-ktx:2.3.0"
+    implementation "androidx.navigation:navigation-ui-ktx:2.3.0"
 
 }

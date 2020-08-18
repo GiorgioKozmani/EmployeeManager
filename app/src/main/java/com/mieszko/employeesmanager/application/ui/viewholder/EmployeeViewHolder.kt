@@ -12,17 +12,26 @@ import com.mieszko.employeesmanager.domain.model.Employee
 class EmployeeViewHolder private constructor(itemView: View) :
     RecyclerView.ViewHolder(itemView) {
 
-    fun bind(currencyItem: Employee?, itemClickListener: () -> Unit) {
-        currencyItem?.let {
-            setFirstName(it.firstName)
-            setLastName(it.lastName)
-            setDepartments(it.departments)
+    fun bind(currencyItem: Employee, itemClickListener: () -> Unit) {
+        with(currencyItem) {
+            setFirstName(firstName)
+            setLastName(lastName)
+            setDepartments(departments)
         }
 
-        // in case employee is null set listener to null
         itemView.setOnClickListener {
-            currencyItem?.let { itemClickListener.invoke() }
+            itemClickListener.invoke()
         }
+    }
+
+    fun bindPlaceholder() {
+        val placeholderText = itemView.context.getString(R.string.unknown)
+
+        setFirstName(placeholderText)
+        setLastName(placeholderText)
+
+        // in case employee is null set listener to null
+        itemView.setOnClickListener(null)
     }
 
     private fun setFirstName(firstName: String) {

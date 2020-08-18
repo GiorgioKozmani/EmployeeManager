@@ -11,7 +11,8 @@
     <string name="update_employee">Update Employee</string>
     <string name="employee_details">Employee details</string>
     <string name="departments">Departments</string>
-    <string name="updating">Updating...</string>
+    <string name="updating">Updating…</string>
     <string name="update_error">Update failed, try again</string>
     <string name="update_completed">Update completed!</string>
+    <string name="unknown">Unknown</string>
 </resources>
