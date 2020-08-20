@@ -36,7 +36,6 @@ class ListFragment : Fragment() {
     private val viewModel: ListViewModel by viewModel()
 
     private val listAdapter = EmployeesAdapter()
-    private val updateObserver = Observer<Int> { id -> viewModel.employeeUpdated(id) }
     private val recyclerView by lazy { requireView().findViewById<RecyclerView>(R.id.employees_list) }
     private val progressBar by lazy { requireView().findViewById<ProgressBar>(R.id.progress_bar) }
     private val retryButton by lazy { requireView().findViewById<Button>(R.id.retry_button) }
@@ -50,6 +49,10 @@ class ListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
         observeViewModels()
         setRetryButtonListener()
     }
@@ -64,7 +67,7 @@ class ListFragment : Fragment() {
                 .subscribe {
                     findNavController()
                         .navigate(
-                            R.id.to_update_employeem_action,
+                            R.id.action_list_to_update,
                             bundleOf(CLICKED_LIST_ITEM_ID to it.id)
                         )
                 })
@@ -93,10 +96,17 @@ class ListFragment : Fragment() {
     }
 
     private fun observeEmployeeUpdates() {
-        // update event occurs when this fragment is not displayed, therefore there's a need to use observeForever
         sharedViewModel
             .employeeUpdatedLiveData
-            .observeForever(updateObserver)
+            .observe(
+                viewLifecycleOwner,
+                Observer {
+                    it.getContentIfNotHandled()
+                        ?.let { updatedId ->
+                            viewModel.employeeUpdated(updatedId)
+                        }
+                }
+            )
     }
 
     private fun setupRecyclerView() {

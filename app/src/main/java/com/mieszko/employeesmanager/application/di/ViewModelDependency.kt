@@ -11,7 +11,7 @@ val viewModelDependency = module {
         SharedViewModel()
     }
     viewModel {
-        ListViewModel(employeesPagingSource = get(), pagingConfig = get())
+        ListViewModel(pagingConfig = get())
     }
     viewModel { (employeeId: Int) ->
         UpdateViewModel(

@@ -12,6 +12,7 @@ interface GetEmployeesPagingSourceUseCase {
     fun invalidate()
 }
 
+// todo into a repository like in https://medium.com/@fandygotama/paging-3-using-rxjava-3ddc218e4dba
 class GetEmployeesPagingSourceUseCaseImpl(
     private val employeeRepository: EmployeeRepository,
     private val getAccessTokenUseCase: GetAccessTokenUseCase,

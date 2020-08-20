@@ -10,20 +10,14 @@ import com.mieszko.employeesmanager.domain.usecase.GetEmployeesPagingSourceUseCa
 import org.koin.java.KoinJavaComponent.get
 
 class ListViewModel(
-    private var employeesPagingSource: GetEmployeesPagingSourceUseCase,
     private var pagingConfig: PagingConfig
 ) : ViewModel() {
 
-    var employeePagerLiveData = createPager()
+    val employeePagerLiveData = createPager()
+    private lateinit var currentPagingSource: GetEmployeesPagingSourceUseCaseImpl
 
     fun employeeUpdated(id: Int) {
-        recreatePagingSource()
-    }
-
-    private fun recreatePagingSource() {
-        employeesPagingSource = get(GetEmployeesPagingSourceUseCase::class.java)
-        employeePagerLiveData = createPager()
-        employeesPagingSource.invalidate()
+        currentPagingSource.invalidate()
     }
 
     private fun createPager(): LiveData<PagingData<Employee>> {
@@ -31,7 +25,12 @@ class ListViewModel(
             config = pagingConfig,
             initialKey = 0,
             remoteMediator = null,
-            pagingSourceFactory = { employeesPagingSource as GetEmployeesPagingSourceUseCaseImpl })
+            pagingSourceFactory = {
+                (get(GetEmployeesPagingSourceUseCase::class.java) as GetEmployeesPagingSourceUseCaseImpl)
+                    .also {
+                        currentPagingSource = it
+                    }
+            })
             .liveData
             .cachedIn(viewModelScope)
     }

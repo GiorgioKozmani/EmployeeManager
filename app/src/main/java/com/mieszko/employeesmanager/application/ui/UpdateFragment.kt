@@ -53,7 +53,6 @@ class UpdateFragment : Fragment() {
             is Resource.Success -> {
                 employee_details_button.isEnabled = true
                 employee_details_loading_overlay.isVisible = false
-
                 setupInitialValues(employeeProfileResponse)
             }
             is Resource.Loading -> {
